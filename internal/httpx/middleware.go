@@ -3,6 +3,7 @@ package httpx
 import (
 	"context"
 	"crypto/subtle"
+	"errors"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -100,7 +101,7 @@ func Recover(log *slog.Logger) Middleware {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
 				if v := recover(); v != nil {
-					if v == http.ErrAbortHandler {
+					if err, ok := v.(error); ok && errors.Is(err, http.ErrAbortHandler) {
 						panic(v)
 					}
 					log.Error("panic in handler", "panic", v, "request_id", RequestIDFrom(r.Context()))

@@ -53,7 +53,7 @@ func DecodeJSON(w http.ResponseWriter, r *http.Request, dst any, maxBytes int64)
 		case errors.Is(err, io.EOF):
 			return errors.New("body is empty")
 		default:
-			return fmt.Errorf("invalid JSON: %v", err)
+			return fmt.Errorf("invalid JSON: %w", err)
 		}
 	}
 	if dec.More() {

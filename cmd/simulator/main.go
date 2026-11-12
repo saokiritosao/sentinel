@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log/slog"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"os/signal"
@@ -23,7 +24,7 @@ func main() {
 		users        = flag.Int("users", 40, "number of simulated users")
 		attackEvery  = flag.Duration("attack-every", 10*time.Second, "interval between attacks")
 		duration     = flag.Duration("duration", 0, "how long to run (0 = until Ctrl+C)")
-		seed         = flag.Uint64("seed", uint64(time.Now().UnixNano()), "random seed")
+		seed         = flag.Uint64("seed", rand.Uint64(), "random seed")
 		tickInterval = 500 * time.Millisecond
 	)
 	flag.Parse()

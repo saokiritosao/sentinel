@@ -151,6 +151,19 @@ func (e *env) int(key string, def int) int {
 	return n
 }
 
+func (e *env) int32(key string, def int32) int32 {
+	v, ok := os.LookupEnv(key)
+	if !ok || v == "" {
+		return def
+	}
+	n, err := strconv.ParseInt(v, 10, 32)
+	if err != nil || n <= 0 {
+		e.errs = append(e.errs, fmt.Errorf("%s: want positive integer, got %q", key, v))
+		return def
+	}
+	return int32(n)
+}
+
 func (e *env) dur(key string, def time.Duration) time.Duration {
 	v, ok := os.LookupEnv(key)
 	if !ok || v == "" {
@@ -206,7 +219,7 @@ func (e *env) redis() Redis {
 func (e *env) postgres() Postgres {
 	return Postgres{
 		DSN:      e.str("POSTGRES_DSN", "postgres://sentinel:sentinel@localhost:5432/sentinel?sslmode=disable"),
-		MaxConns: int32(e.int("POSTGRES_MAX_CONNS", 10)),
+		MaxConns: e.int32("POSTGRES_MAX_CONNS", 10),
 	}
 }
 

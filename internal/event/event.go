@@ -76,7 +76,7 @@ func (e Event) Validate(now time.Time) error {
 func Decode(b []byte) (Event, error) {
 	var e Event
 	if err := json.Unmarshal(b, &e); err != nil {
-		return Event{}, fmt.Errorf("%w: decode json: %v", ErrInvalid, err)
+		return Event{}, fmt.Errorf("%w: decode json: %w", ErrInvalid, err)
 	}
 	if err := e.Validate(time.Time{}); err != nil {
 		return Event{}, err
